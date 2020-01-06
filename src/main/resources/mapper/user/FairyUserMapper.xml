@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fairy.user.mapper.FairyUserMapper">
+	
+	<update id = "increaseWrongTimes">
+    	UPDATE 
+    		fairy_user
+		SET 
+			fld_wrong_times = fld_wrong_times + 1
+		WHERE
+			fld_account = #{accountNo} OR fld_email = #{accountNo}
+    </update>
+</mapper>
