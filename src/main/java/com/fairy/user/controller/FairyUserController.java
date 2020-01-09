@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2019-12-19
  */
 @RestController
-@RequestMapping("/user/fairy-user")
+@RequestMapping("/fairy/user")
 public class FairyUserController {
 
 }

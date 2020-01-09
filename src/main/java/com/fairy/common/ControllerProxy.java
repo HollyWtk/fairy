@@ -1,5 +1,6 @@
 package com.fairy.common;
 
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**  
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author yhh  
  * @date 2019年12月19日  
  */
-@RestController
+@RestController("/fairy")
 public class ControllerProxy {
 
 }

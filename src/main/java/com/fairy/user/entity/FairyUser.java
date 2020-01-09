@@ -41,85 +41,85 @@ public class FairyUser implements UserDetails{
 
     private static final long serialVersionUID = 6023736392825666588L;
 
-    @TableId(value = "fld_id", type = IdType.AUTO)
-    private Integer fldId;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 账户
      */
-    private String fldAccount;
+    private String account;
 
     /**
      * 用户姓名
      */
-    private String fldAccountName;
+    private String accountName;
 
     /**
      * 密码
      */
-    private String fldPassword;
+    private String password;
 
     /**
      * 上次登录时间
      */
-    private String fldLastLoginTime;
+    private String lastLoginTime;
 
     /**
      * 用户状态
      */
-    private Integer fldActive;
+    private Integer active;
 
     /**
      * 错误次数
      */
-    private Integer fldWrongTimes;
+    private Integer wrongTimes;
 
     /**
      * 角色ID
      */
-    private String fldRoleName;
+    private String roleName;
 
     /**
      * 联系方式
      */
-    private String fldMobile;
+    private String mobile;
 
     /**
      * 部门ID
      */
-    private String fldDepartment;
+    private String department;
 
     /**
      * 邮箱
      */
-    private String fldEmail;
+    private String email;
 
     /**
      * 创建时间
      */
-    private String fldCreateTime;
+    private String createTime;
 
     /**
      * 创建人
      */
-    private String fldCreater;
+    private String creater;
 
     /**
      * 最后更新人
      */
-    private String fldUpdater;
+    private String updater;
 
     /**
      * 最后更新时间
      */
-    private String fldUpdateTime;
+    private String updateTime;
     
     @TableField(exist = false)
     private Set<GrantedAuthority> authorities = new HashSet<>();
 
     public FairyUser(String username, String password, Collection<? extends GrantedAuthority> authorities2) {
-        this.fldAccount = username;
-        this.fldPassword = password;
+        this.account = username;
+        this.password = password;
         this.authorities = Collections.unmodifiableSet(sortAuthorities(authorities));
     }
 
@@ -132,13 +132,13 @@ public class FairyUser implements UserDetails{
     @Override
     public String getPassword() {
 
-        return this.fldPassword;
+        return this.password;
     }
 
     @Override
     public String getUsername() {
 
-        return this.fldAccount;
+        return this.account;
     }
 
     @Override
@@ -150,7 +150,7 @@ public class FairyUser implements UserDetails{
     @Override
     public boolean isAccountNonLocked() {
 
-        return fldActive == 1 ? true : false;
+        return active == 1 ? true : false;
     }
 
     @Override

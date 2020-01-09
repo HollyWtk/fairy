@@ -70,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.logout().logoutUrl("/fairy/user/logout").addLogoutHandler((request, response, authentication) -> {
         }).logoutSuccessHandler((request, response, authentication) -> {
-            tokenSvr.clearToken(request.getHeader("username"));
+            tokenSvr.deleteToken(request.getHeader("username"));
         }).invalidateHttpSession(true).clearAuthentication(true);
 
         http.exceptionHandling()
@@ -119,13 +119,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 String username = authentication.getName();
                 MngResponse mngResponse = new MngResponse();
                 FairyUser user = iFairyUserService.queryUserByNameOrEmail(username);
-                Integer wrongTimes = user.getFldWrongTimes();
+                Integer wrongTimes = user.getWrongTimes();
                 if (wrongTimes != null && wrongTimes >= 5) {
                     mngResponse.code = 201;
                     mngResponse.message = "账户登录错误次数过多,请联系管理员!";
                     throw new DisabledException(JSONObject.toJSONString(mngResponse));
                 }
-                Integer userStatus = user.getFldActive();
+                Integer userStatus = user.getActive();
                 if(userStatus != null && userStatus != 1) {
                     mngResponse.code = 202;
                     mngResponse.message = "账户属于锁定状态,请联系管理员!";
@@ -161,18 +161,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             UserResp usp = new UserResp();
             if (user != null) {
                 usp.username = authentication.getName();
-                usp.accountName = user.getFldAccountName();
-                usp.mobile = user.getFldMobile();
-                usp.email = user.getFldEmail();
-                usp.department = user.getFldDepartment();
-                usp.role_name = user.getFldRoleName();
+                usp.accountName = user.getAccountName();
+                usp.mobile = user.getMobile();
+                usp.email = user.getEmail();
+                usp.department = user.getDepartment();
+                usp.role_name = user.getRoleName();
                 usp.token = tokenSvr.updateToken(authentication.getName());
             }
-            user.setFldLastLoginTime(DateTimeUtils.getStringToday());
+            user.setLastLoginTime(DateTimeUtils.getStringToday());
             FairyUser updateUser = new FairyUser();
-            updateUser.setFldAccount(user.getFldAccount());
-            updateUser.setFldLastLoginTime(DateTimeUtils.getStringToday());
-            updateUser.setFldWrongTimes(0);
+            updateUser.setAccount(user.getAccount());
+            updateUser.setLastLoginTime(DateTimeUtils.getStringToday());
+            updateUser.setWrongTimes(0);
             iFairyUserService.updateUserByNameOrEmail(updateUser);
 			responseText(response, MngResponse.SUCESS_RESULT(usp));
 		});

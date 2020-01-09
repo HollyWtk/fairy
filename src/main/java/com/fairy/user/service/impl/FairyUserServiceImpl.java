@@ -15,12 +15,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fairy.common.MngSvrEncrypter;
 import com.fairy.configure.FairyProperties;
 import com.fairy.user.entity.FairyUser;
 import com.fairy.user.mapper.FairyUserMapper;
 import com.fairy.user.service.IFairyUserService;
 import com.fairy.utils.data.MngResponse;
+import com.fairy.utils.encrypt.Md5Util;
 import com.fairy.utils.encrypt.RSAUtils;
 
 /**
@@ -34,9 +34,6 @@ import com.fairy.utils.encrypt.RSAUtils;
 @Service
 public class FairyUserServiceImpl extends ServiceImpl<FairyUserMapper, FairyUser> implements IFairyUserService,UserDetailsService {
 
-    @Autowired
-    MngSvrEncrypter ecrypter;
-    
     @Autowired
     FairyProperties fairyProperties;
     
@@ -52,9 +49,9 @@ public class FairyUserServiceImpl extends ServiceImpl<FairyUserMapper, FairyUser
         RSAPrivateKey privateKey = RSAUtils.loadPrivateKey(fairyProperties.getRsaPrivateKey());
         // RSA解密
         password = new String(RSAUtils.decrypt(privateKey, bt));
-        // DES加密
-        password = ecrypter.encrypt(password);
-        if (user != null && password.equals(user.getFldPassword())) {
+        // MD5加密
+        password = Md5Util.md5(password, 16);
+        if (user != null && password.equals(user.getPassword())) {
             flag = true;
         }
         return flag;
@@ -63,7 +60,7 @@ public class FairyUserServiceImpl extends ServiceImpl<FairyUserMapper, FairyUser
     @Override
     public FairyUser queryUserByNameOrEmail(String args) {
         FairyUser user = getOne(new QueryWrapper<FairyUser>().lambda()
-                .eq(FairyUser::getFldAccount, args).or().eq(FairyUser::getFldEmail, args));
+                .eq(FairyUser::getAccount, args).or().eq(FairyUser::getEmail, args));
         return user;
     }
 
@@ -75,7 +72,7 @@ public class FairyUserServiceImpl extends ServiceImpl<FairyUserMapper, FairyUser
     @Override
     public boolean updateUserByNameOrEmail(FairyUser user) {
         boolean result = this.update(user, new UpdateWrapper<FairyUser>().lambda()
-                .eq(FairyUser::getFldAccount,user.getFldAccount()).or().eq(FairyUser::getFldEmail, user.getFldEmail()));
+                .eq(FairyUser::getAccount,user.getAccount()).or().eq(FairyUser::getEmail, user.getEmail()));
         return result;
     }
 
